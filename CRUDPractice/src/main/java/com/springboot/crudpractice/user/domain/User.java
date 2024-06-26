@@ -1,4 +1,4 @@
-package users.domain;
+package com.springboot.crudpractice.user.domain;
 
 import lombok.*;
 
