@@ -15,7 +15,6 @@ target/
 
 ### IntelliJ IDEA ###
 application.properties
-pom.xml
 dbconn.properties
 SqlMapConfig.xml
 .idea
