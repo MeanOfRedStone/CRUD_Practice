@@ -4,10 +4,10 @@ import com.springboot.crudpractice.user.domain.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -19,7 +19,6 @@ public class UserMapperTest {
     private SqlSession sqlSession;
 
     @Test
-    @Rollback
     void testSaveUser() {
         User testUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
@@ -28,11 +27,23 @@ public class UserMapperTest {
 
         sqlSession.insert("UserMapper.saveUser", testUser);
         int actualCount = countUsers();
-
         assertEquals(expectedCount, actualCount);
     }
 
     private int countUsers() {
         return sqlSession.selectOne("UserMapper.countUsers");
     }
+
+    @Test
+    void testFindUser() {
+        User adminUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
+                .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
+        sqlSession.insert("UserMapper.saveUser", adminUser);
+
+        User loginUser = User.builder().id("admin").password("admin").build();
+        User actualUser = sqlSession.selectOne("UserMapper.findUser", loginUser);
+
+        assertNotNull(actualUser);
+    }
+
 }
