@@ -11,6 +11,11 @@
             (#{id}, #{password}, #{name}, #{email}, #{phone}, #{address}, #{addressDetail},
              #{agreement}, #{phoneContact}, #{emailContact}, NOW(), NOW())
     </insert>
+
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*)
+        FROM users
+    </select>
 </mapper>
 
 
