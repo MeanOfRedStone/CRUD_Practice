@@ -22,4 +22,11 @@
             `item_id`, `name`, `price`, `category`, `image`, `information`, `measurment`
         FROM items
     </select>
+
+    <select id="findItemByItemId" parameterType="long" resultType="item">
+        SELECT
+            `item_id`, `name`, `price`, `category`, `image`, `information`, `measurment`
+        FROM items
+        WHERE `item_id`=#{itemId}
+    </select>
 </mapper>
