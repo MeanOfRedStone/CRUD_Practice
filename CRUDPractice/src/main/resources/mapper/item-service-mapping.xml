@@ -16,4 +16,10 @@
             (#{name}, #{price}, #{category}, #{image}, #{information}, #{measurment},
              NOW(), NOW())
     </insert>
+
+    <select id="findAllItems" resultType="item">
+        SELECT
+            `item_id`, `name`, `price`, `category`, `image`, `information`, `measurment`
+        FROM items
+    </select>
 </mapper>
