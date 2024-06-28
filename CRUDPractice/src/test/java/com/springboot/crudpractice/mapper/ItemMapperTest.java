@@ -40,4 +40,32 @@ public class ItemMapperTest {
     private int countItems() {
         return sqlSession.selectOne("ItemMapper.countItems");
     }
+
+    @Test
+    void testFindAllItems() {
+        Item testItem1 = Item.builder()
+                .name("블루셔츠")
+                .price(1_000)
+                .category("셔츠")
+                .image("image1")
+                .information("info1")
+                .measurment("measurement1")
+                .build();
+        sqlSession.insert("ItemMapper.saveItem", testItem1);
+        Item testItem2 = Item.builder()
+                .name("청바지")
+                .price(2_000)
+                .category("바지")
+                .image("image2")
+                .information("info2")
+                .measurment("measurement2")
+                .build();
+        sqlSession.insert("ItemMapper.saveItem", testItem2);
+        int expectedCount = countItems();
+
+        List<Item> items = sqlSession.selectList("ItemMapper.findAllItems");
+
+        int actualCount = items.size();
+        assertEquals(expectedCount, actualCount);
+    }
 }
