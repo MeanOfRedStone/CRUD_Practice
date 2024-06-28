@@ -4,6 +4,8 @@ import com.springboot.crudpractice.item.domain.Item;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,5 +69,24 @@ public class ItemMapperTest {
 
         int actualCount = items.size();
         assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    void testFindItemByItemId() {
+        Item testItem = Item.builder()
+                .name("블루셔츠")
+                .price(1_000)
+                .category("셔츠")
+                .image("image1")
+                .information("info1")
+                .measurment("measurement1")
+                .build();
+        sqlSession.insert("ItemMapper.saveItem", testItem);
+        Long generatedItemId = testItem.getItemId();
+
+        Item fetchedItem = sqlSession.selectOne("ItemMapper.findItemByItemId", generatedItemId);
+
+        assertNotNull(fetchedItem);
+        assertEquals(generatedItemId, fetchedItem.getItemId());
     }
 }
