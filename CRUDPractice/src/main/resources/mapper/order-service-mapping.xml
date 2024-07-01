@@ -14,4 +14,10 @@
         VALUES
             (#{userId}, #{status}, #{option}, #{quantity}, #{price}, NOW(), NOW())
     </insert>
+
+    <update id="updateOrder" parameterType="order">
+        UPDATE orders
+        SET `status` = #{status}, `option` = #{option}, `quantity` = #{quantity}, `modified_at` = NOW()
+        WHERE `order_id` = #{orderId}
+    </update>
 </mapper>
