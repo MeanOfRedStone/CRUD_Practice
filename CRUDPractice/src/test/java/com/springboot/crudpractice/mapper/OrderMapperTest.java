@@ -44,13 +44,6 @@ public class OrderMapperTest {
     @Test
     void testUpdateOrder() {
         Long generatedId = getTestUser().getUserId();
-        Order testOrder =Order.builder()
-                .userId(generatedId)
-                .status("cart")
-                .option("L")
-                .quantity(3)
-                .price(1_000)
-                .build();
 
         String expectedOption = "M";
         Order updatedOrder = Order.builder()
