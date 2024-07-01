@@ -6,9 +6,13 @@ import com.springboot.crudpractice.user.domain.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -58,6 +62,18 @@ public class OrderMapperTest {
         String actualOption = updatedOrder.getOption();
 
         assertEquals(expectedOption, actualOption);
+    }
+
+    @Test
+    void testFindOrdersByUserUserId() {
+        Long generatedId = getTestUser().getUserId();
+
+        List<Order> fetchedOrders = sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId);
+
+        assertNotNull(fetchedOrders);
+        for (Order order : fetchedOrders) {
+            assertEquals(order.getUserId(), generatedId);
+        }
     }
 
     private User getTestUser() {
