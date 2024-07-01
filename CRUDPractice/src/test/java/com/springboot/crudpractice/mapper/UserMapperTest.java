@@ -19,7 +19,7 @@ public class UserMapperTest {
     private SqlSession sqlSession;
 
     @Test
-    void testSaveUser() {
+    void saveUser_WhenUserIsValid_ShouldIncreaseUsersCount() {
         User testUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
         int count = countUsers();
@@ -35,7 +35,7 @@ public class UserMapperTest {
     }
 
     @Test
-    void testFindUser() {
+    void findUser_WhenIdAndPasswordAreCorrect_ShouldReturnUser() {
         User adminUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
         sqlSession.insert("UserMapper.saveUser", adminUser);
