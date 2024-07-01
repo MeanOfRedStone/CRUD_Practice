@@ -21,7 +21,7 @@ public class ItemMapperTest {
     private SqlSession sqlSession;
 
     @Test
-    void testSaveItem() {
+    void saveItem_WhenItemIsValid_ShouldIncreaseItemsCount() {
         Item testItem = Item.builder()
                 .name("블루셔츠")
                 .price(1_000)
@@ -44,7 +44,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    void testFindAllItems() {
+    void findAllItems_ShouldReturnAllItems() {
         Item testItem1 = Item.builder()
                 .name("블루셔츠")
                 .price(1_000)
@@ -72,7 +72,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    void testFindItemByItemId() {
+    void findItemByItemId_WhenItemExists_ShouldReturnItem() {
         Item testItem = Item.builder()
                 .name("블루셔츠")
                 .price(1_000)
