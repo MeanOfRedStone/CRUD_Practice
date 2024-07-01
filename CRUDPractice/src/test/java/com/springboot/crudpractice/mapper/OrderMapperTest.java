@@ -41,6 +41,32 @@ public class OrderMapperTest {
         return sqlSession.selectOne("OrderMapper.countOrders");
     }
 
+    @Test
+    void testUpdateOrder() {
+        Long generatedId = getTestUser().getUserId();
+        Order testOrder =Order.builder()
+                .userId(generatedId)
+                .status("cart")
+                .option("L")
+                .quantity(3)
+                .price(1_000)
+                .build();
+
+        String expectedOption = "M";
+        Order updatedOrder = Order.builder()
+                .userId(generatedId)
+                .status("cart")
+                .option(expectedOption)
+                .quantity(3)
+                .price(1_000)
+                .build();
+
+        sqlSession.update("OrderMapper.updateOrder", updatedOrder);
+        String actualOption = updatedOrder.getOption();
+
+        assertEquals(expectedOption, actualOption);
+    }
+
     private User getTestUser() {
         User testUser = User.builder()
                 .id("admin")
