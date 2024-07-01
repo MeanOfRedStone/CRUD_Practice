@@ -20,4 +20,10 @@
         SET `status` = #{status}, `option` = #{option}, `quantity` = #{quantity}, `modified_at` = NOW()
         WHERE `order_id` = #{orderId}
     </update>
+
+    <select id="findOrdersOfWhichStatusAreCartByUserId" parameterType="order" resultType="order">
+        SELECT `order_id`, `status`, `option` ,`quantity`, `price`
+        FROM orders
+        WHERE `user_id` = #{userId} AND `status`= "cart"
+    </select>
 </mapper>
