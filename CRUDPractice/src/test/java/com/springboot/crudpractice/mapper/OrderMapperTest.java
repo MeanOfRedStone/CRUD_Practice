@@ -23,7 +23,7 @@ public class OrderMapperTest {
     private SqlSession sqlSession;
 
     @Test
-    void testSaveOrder() {
+    void saveOrder_WhenOrderIsValid_ShouldIncreaseOrdersCount() {
         Long generatedId = getTestUser().getUserId();
         Order testOrder =Order.builder()
                 .userId(generatedId)
@@ -46,7 +46,7 @@ public class OrderMapperTest {
     }
 
     @Test
-    void testUpdateOrderOfWhichStatusIsCart() {
+    void updateOrderOfWhichStatusIsCart_WhenOrderExists_ShouldUpdateOrder() {
         Long generatedId = getTestUser().getUserId();
 
         String expectedOption = "M";
@@ -65,7 +65,7 @@ public class OrderMapperTest {
     }
 
     @Test
-    void testFindOrdersOfWhichStatusAreCartByUserId() {
+    void testFindOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
         Long generatedId = getTestUser().getUserId();
 
         List<Order> fetchedOrders = sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId);
