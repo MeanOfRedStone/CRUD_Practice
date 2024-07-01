@@ -65,7 +65,7 @@ public class OrderMapperTest {
     }
 
     @Test
-    void testFindOrdersByUserUserId() {
+    void testFindOrdersOfWhichStatusAreCartByUserId() {
         Long generatedId = getTestUser().getUserId();
 
         List<Order> fetchedOrders = sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId);
