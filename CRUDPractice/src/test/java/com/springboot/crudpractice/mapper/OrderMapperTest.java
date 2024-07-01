@@ -65,7 +65,7 @@ public class OrderMapperTest {
     }
 
     @Test
-    void testFindOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
+    void ㄹindOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
         Long generatedId = getTestUser().getUserId();
 
         List<Order> fetchedOrders = sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId);
