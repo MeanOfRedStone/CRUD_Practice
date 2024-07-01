@@ -46,7 +46,7 @@ public class OrderMapperTest {
     }
 
     @Test
-    void testUpdateOrder() {
+    void testUpdateOrderOfWhichStatusIsCart() {
         Long generatedId = getTestUser().getUserId();
 
         String expectedOption = "M";
@@ -58,7 +58,7 @@ public class OrderMapperTest {
                 .price(1_000)
                 .build();
 
-        sqlSession.update("OrderMapper.updateOrder", updatedOrder);
+        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", updatedOrder);
         String actualOption = updatedOrder.getOption();
 
         assertEquals(expectedOption, actualOption);
