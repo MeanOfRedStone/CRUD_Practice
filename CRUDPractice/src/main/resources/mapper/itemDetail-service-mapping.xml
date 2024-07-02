@@ -19,4 +19,9 @@
         SELECT `item_id`, `option`, `quantity`
         FROM items_detail
     </select>
+
+    <select id="findItemDetailByDetailId" parameterType="long" resultType="itemDetail">
+        SELECT `detail_id`, `item_id`, `option`, `quantity`
+        FROM items_detail
+    </select>
 </mapper>
