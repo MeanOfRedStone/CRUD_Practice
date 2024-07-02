@@ -24,4 +24,10 @@
         SELECT `detail_id`, `item_id`, `option`, `quantity`
         FROM items_detail
     </select>
+
+    <update id="updateItemDetail" parameterType="itemDetail">
+        UPDATE items_detail
+        SET `quantity` = #{quantity}, `option` = #{option}, `modified_at` = NOW()
+        WHERE `detail_id` = #{detailId}
+    </update>
 </mapper>
