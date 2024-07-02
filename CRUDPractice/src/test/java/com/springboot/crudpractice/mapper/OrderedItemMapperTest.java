@@ -7,6 +7,7 @@ import com.springboot.crudpractice.user.domain.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,23 @@ public class OrderedItemMapperTest {
 
         int actualCount = countOrderedItems();
         assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    void findOrderedItemByOrderIdAndItemId_WhenOrderedItemExists_ShouldReturnOrderedItem(){
+        Long orderId = getOrderId();
+        Long itemId = getItemId();
+        OrderedItem testOrderedItem = OrderedItem.builder()
+                .orderId(orderId)
+                .itemId(itemId)
+                .build();
+        sqlSession.insert("OrderedItemMapper.saveOrderedItem", testOrderedItem);
+
+        OrderedItem fetchedOrderedItem = sqlSession.selectOne("OrderedItemMapper.findOrderedItemByOrderIdAndItemId", OrderedItem.builder().itemId(itemId).orderId(orderId).build());
+
+        assertNotNull(fetchedOrderedItem);
+        assertEquals(itemId, fetchedOrderedItem.getItemId());
+        assertEquals(orderId, fetchedOrderedItem.getOrderId());
     }
 
     private int countOrderedItems() {
