@@ -37,6 +37,28 @@ public class ItemDetailMapperTest {
         return sqlSession.selectOne("ItemDetailMapper.countItemsDetail");
     }
 
+    @Test
+    void findAllItemDetailByItemId_WhenItemDetailExist_ShouldReturnItemDetail() {
+        Long generatedItemId = getItemId();
+        saveTestItemDetail(generatedItemId, "L", 5);
+        saveTestItemDetail(generatedItemId, "M", 3);
+        int expectedCount = 2;
+
+        List<ItemDetail> fetchedItemDetails = sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", generatedItemId);
+
+        assertEquals(expectedCount, fetchedItemDetails.size());
+    }
+
+    private void saveTestItemDetail(Long itemId, String option, int quantity) {
+        ItemDetail testItemDetail = ItemDetail.builder()
+                .itemId(itemId)
+                .option(option)
+                .quantity(quantity)
+                .build();
+
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", testItemDetail);
+    }
+
     private long getItemId() {
         Item testItem = Item.builder()
                 .name("블루셔츠")
