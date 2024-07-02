@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ItemDetailMapper">
+    <select id="countItemsDetail" resultType="int">
+        SELECT COUNT(*)
+        FROM items_detail
+    </select>
+
+    <insert id="saveItemDetail" parameterType="itemDetail" useGeneratedKeys="true" keyProperty="detailId">
+        INSERT INTO items_detail
+            (`item_id`, `option`, `quantity`, `created_at`, `modified_at`)
+        VALUES
+            (#{itemId}, #{option}, #{quantity}, NOW(), NOW())
+    </insert>
+</mapper>
