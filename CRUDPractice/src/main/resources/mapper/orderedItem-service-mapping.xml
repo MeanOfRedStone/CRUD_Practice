@@ -14,4 +14,9 @@
         VALUES
             (#{orderId}, #{itemId}, NOW(), NOW())
     </insert>
+
+    <select id="findOrderedItemByOrderIdAndItemId" parameterType="orderedItem" resultType="orderedItem">
+        SELECT `order_id`, `item_id`
+        FROM ordered_items
+    </select>
 </mapper>
