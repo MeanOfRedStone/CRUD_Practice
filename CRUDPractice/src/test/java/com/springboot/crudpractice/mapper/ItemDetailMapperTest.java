@@ -74,6 +74,29 @@ public class ItemDetailMapperTest {
         assertEquals(testItemDetail.getDetailId(), fetechedItemDetail.getDetailId());
     }
 
+    @Test
+    void updateItemDetail_WhenItemDetailExists_ShouldUpdateItemDetail() {
+        Long generatedItemId = getItemId();
+        ItemDetail testItemDetail = ItemDetail.builder()
+                .itemId(generatedItemId)
+                .option("L")
+                .quantity(5)
+                .build();
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", testItemDetail);
+
+        int changedQuantity = 0;
+        ItemDetail updatedItemDetail = ItemDetail.builder()
+                .detailId(testItemDetail.getDetailId())
+                .itemId(generatedItemId)
+                .option("L")
+                .quantity(changedQuantity)
+                .build();
+        sqlSession.update("ItemDetailMapper.updateItemDetail", updatedItemDetail);
+
+        ItemDetail fetchedItemDetail = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", testItemDetail.getDetailId());
+        assertEquals(changedQuantity, fetchedItemDetail.getQuantity());
+    }
+
     private long getItemId() {
         Item testItem = Item.builder()
                 .name("블루셔츠")
