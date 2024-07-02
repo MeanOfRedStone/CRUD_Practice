@@ -14,4 +14,9 @@
         VALUES
             (#{itemId}, #{option}, #{quantity}, NOW(), NOW())
     </insert>
+
+    <select id="findAllItemDetailByItemId" parameterType="long" resultType="itemDetail">
+        SELECT `item_id`, `option`, `quantity`
+        FROM items_detail
+    </select>
 </mapper>
