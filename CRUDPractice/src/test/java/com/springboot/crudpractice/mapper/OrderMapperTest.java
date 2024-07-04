@@ -48,20 +48,28 @@ public class OrderMapperTest {
     @Test
     void updateOrderOfWhichStatusIsCart_WhenOrderExists_ShouldUpdateOrder() {
         Long generatedId = getTestUser().getUserId();
-
-        String expectedOption = "M";
-        Order updatedOrder = Order.builder()
+        Order testOrder = Order.builder()
                 .userId(generatedId)
                 .status("cart")
-                .option(expectedOption)
+                .option("M")
                 .quantity(3)
                 .price(1_000)
                 .build();
+        sqlSession.insert("OrderMapper.saveOrder", testOrder);
 
-        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", updatedOrder);
-        String actualOption = updatedOrder.getOption();
+        int expectedQuantity = 1;
+        Order updatedTestOrder = Order.builder()
+                .orderId(testOrder.getOrderId())
+                .userId(generatedId)
+                .status("cart")
+                .option("M")
+                .quantity(expectedQuantity)
+                .price(1_000)
+                .build();
+        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", updatedTestOrder);
 
-        assertEquals(expectedOption, actualOption);
+        Order fetechedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", testOrder.getOrderId());
+        assertEquals(expectedQuantity, fetechedOrder.getQuantity());
     }
 
     @Test
