@@ -92,4 +92,24 @@ public class OrderMapperTest {
         sqlSession.insert("UserMapper.saveUser", testUser);
         return testUser;
     }
+
+    @Test
+    void findOrderByOrderId_WhenOrderExists_ShouldReturnOrder() {
+        Long generatedId = getTestUser().getUserId();
+        Order testOrder =Order.builder()
+                .userId(generatedId)
+                .status("cart")
+                .option("L")
+                .quantity(3)
+                .price(1_000)
+                .build();
+        sqlSession.insert("OrderMapper.saveOrder", testOrder);
+        Long expectedOrderId = testOrder.getOrderId();
+
+        Order fetchedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", testOrder.getOrderId());
+        Long actualOrderId = fetchedOrder.getOrderId();
+
+        assertNotNull(fetchedOrder);
+        assertEquals(expectedOrderId, actualOrderId);
+    }
 }
