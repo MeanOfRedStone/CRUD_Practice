@@ -26,4 +26,10 @@
         FROM orders
         WHERE `user_id` = #{userId} AND `status`= "cart"
     </select>
+
+    <select id="findOrderByOrderId" parameterType="long" resultType="order">
+        SELECT `order_id`, `user_id`, `status`, `option`, `quantity`, `price`
+        FROM orders
+        WHERE `order_id` = #{orderId}
+    </select>
 </mapper>
