@@ -1,6 +1,7 @@
 package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.user.domain.User;
+import com.springboot.crudpractice.user.dto.JoinRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -20,12 +21,12 @@ public class UserMapperTest {
 
     @Test
     void saveUser_WhenUserIsValid_ShouldIncreaseUsersCount() {
-        User testUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
+        JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
         int count = countUsers();
         int expectedCount = count + NEW_USER;
 
-        sqlSession.insert("UserMapper.saveUser", testUser);
+        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
         int actualCount = countUsers();
         assertEquals(expectedCount, actualCount);
     }

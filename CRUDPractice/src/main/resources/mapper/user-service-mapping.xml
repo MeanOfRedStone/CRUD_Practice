@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="UserMapper">
-    <insert id="saveUser" parameterType="user" useGeneratedKeys="true" keyProperty="userId">
+    <insert id="saveUser" parameterType="joinRequestDto" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO users
         (`id`, `password`, `name`, `email`, `phone`, `address`, `address_detail`,
          `agreement`, `phone_contact`, `email_contact`, `created_at`, `modified_at`)
