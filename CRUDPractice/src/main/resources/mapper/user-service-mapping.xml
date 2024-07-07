@@ -17,8 +17,8 @@
         FROM users
     </select>
 
-    <select id="findUser" parameterType="user" resultType="user">
-        SELECT `user_id`, `id`, `name`
+    <select id="findUser" parameterType="loginRequestDto" resultType="loginResponseDto">
+        SELECT `user_id`, `name`
         FROM users
         WHERE `id`=#{id} AND `password`=#{password}
     </select>

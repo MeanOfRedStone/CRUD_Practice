@@ -2,6 +2,8 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
+import com.springboot.crudpractice.user.dto.LoginRequestDto;
+import com.springboot.crudpractice.user.dto.LoginResponseDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -37,14 +39,17 @@ public class UserMapperTest {
 
     @Test
     void findUser_WhenIdAndPasswordAreCorrect_ShouldReturnUser() {
-        User adminUser = User.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
+        JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
-        sqlSession.insert("UserMapper.saveUser", adminUser);
+        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
+        long expectedUserId = joinRequestDto.getUserId();
 
-        User loginUser = User.builder().id("admin").password("admin").build();
-        User actualUser = sqlSession.selectOne("UserMapper.findUser", loginUser);
+        LoginRequestDto loginRequestDto = LoginRequestDto.builder().id("admin").password("admin").build();
+        LoginResponseDto loginResponseDto = sqlSession.selectOne("UserMapper.findUser", loginRequestDto);
+        long actualUserId = loginResponseDto.getUserId();
 
-        assertNotNull(actualUser);
+        assertNotNull(loginResponseDto);
+        assertEquals(expectedUserId, actualUserId);
     }
 
 }
