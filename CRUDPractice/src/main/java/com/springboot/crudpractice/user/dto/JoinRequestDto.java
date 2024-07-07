@@ -5,6 +5,7 @@ import lombok.*;
 @Builder
 @Getter
 public class JoinRequestDto {
+    private long userId;
     private String id;
     private String password;
     private String name;
