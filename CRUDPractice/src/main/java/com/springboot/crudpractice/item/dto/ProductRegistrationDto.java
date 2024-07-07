@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ProductRegistrationDto {
+    private long itemId;
     private String name;
     private int price;
     private String category;
