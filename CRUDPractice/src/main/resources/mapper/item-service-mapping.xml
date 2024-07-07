@@ -8,7 +8,7 @@
         FROM items
     </select>
 
-    <insert id="saveItem" parameterType="item" useGeneratedKeys="true" keyProperty="itemId">
+    <insert id="saveItem" parameterType="productRegistrationDto" useGeneratedKeys="true" keyProperty="itemId">
         INSERT INTO items
             (`name`, `price`, `category`, `image`, `information`, `measurment`
             , `created_at`, `modified_at`)
