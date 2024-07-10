@@ -13,7 +13,4 @@ public class ProductDetailResponseDto {
     private String image;
     private String information;
     private String measurment;
-    private long detailId;
-    private String option;
-    private int quantity;
 }
