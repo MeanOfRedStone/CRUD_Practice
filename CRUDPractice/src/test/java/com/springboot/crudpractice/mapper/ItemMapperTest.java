@@ -1,6 +1,7 @@
 package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
+import com.springboot.crudpractice.item.dto.ProductListDto;
 import com.springboot.crudpractice.item.dto.ProductRegistrationDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,9 @@ public class ItemMapperTest {
 
     @Test
     void findAllItems_ShouldReturnAllItems() {
-        Item testItem1 = Item.builder()
+        int initialCount = countItems();
+        int expectedCount = initialCount + 2 * NEW_ITEM;
+        ProductRegistrationDto productRegistrationDto = ProductRegistrationDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -54,8 +57,8 @@ public class ItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", testItem1);
-        Item testItem2 = Item.builder()
+        sqlSession.insert("ItemMapper.saveItem", productRegistrationDto);
+        ProductRegistrationDto productRegistrationDto2 = ProductRegistrationDto.builder()
                 .name("청바지")
                 .price(2_000)
                 .category("바지")
@@ -63,12 +66,13 @@ public class ItemMapperTest {
                 .information("info2")
                 .measurment("measurement2")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", testItem2);
-        int expectedCount = countItems();
+        sqlSession.insert("ItemMapper.saveItem", productRegistrationDto2);
 
-        List<Item> items = sqlSession.selectList("ItemMapper.findAllItems");
 
-        int actualCount = items.size();
+        List<Item> fetchedItems = sqlSession.selectList("ItemMapper.findAllItems");
+        ProductListDto productListDto = new ProductListDto(fetchedItems);
+
+        int actualCount = productListDto.getProductList().size();
         assertEquals(expectedCount, actualCount);
     }
 

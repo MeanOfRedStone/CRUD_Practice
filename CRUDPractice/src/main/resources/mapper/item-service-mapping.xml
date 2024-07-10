@@ -19,7 +19,7 @@
 
     <select id="findAllItems" resultType="item">
         SELECT
-            `item_id`, `name`, `price`, `category`, `image`, `information`, `measurment`
+            `item_id`, `name`, `price`, `category`, `image`
         FROM items
     </select>
 
