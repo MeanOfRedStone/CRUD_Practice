@@ -1,14 +1,17 @@
 package com.springboot.crudpractice.order.dto;
 
+import com.springboot.crudpractice.order.domain.Order;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Collections;
+import java.util.List;
+
 @Getter
-@Builder
 public class CartResponseDto {
-    private long orderId;
-    private long userId;
-    private String option;
-    private int quantity;
-    private int price;
+    private final List<Order> cartList;
+
+    public CartResponseDto(List<Order> cartList) {
+        this.cartList = Collections.unmodifiableList(cartList);
+    }
 }
