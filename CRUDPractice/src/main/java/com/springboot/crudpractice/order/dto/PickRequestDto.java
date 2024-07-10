@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PickRequestDto {
+    private long orderId;
     private long userId;
     private String option;
     private String status;
