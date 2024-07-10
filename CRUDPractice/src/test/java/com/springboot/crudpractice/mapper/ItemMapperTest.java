@@ -1,6 +1,8 @@
 package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
+import com.springboot.crudpractice.item.dto.ProductDetailRequestDto;
+import com.springboot.crudpractice.item.dto.ProductDetailResponseDto;
 import com.springboot.crudpractice.item.dto.ProductListResponseDto;
 import com.springboot.crudpractice.item.dto.ProductRegistrationRequestDto;
 import org.apache.ibatis.session.SqlSession;
@@ -78,7 +80,7 @@ public class ItemMapperTest {
 
     @Test
     void findItemByItemId_WhenItemExists_ShouldReturnItem() {
-        Item testItem = Item.builder()
+        ProductRegistrationRequestDto productRegistrationRequestDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -86,12 +88,12 @@ public class ItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", testItem);
-        Long generatedItemId = testItem.getItemId();
+        sqlSession.insert("ItemMapper.saveItem", productRegistrationRequestDto);
+        ProductDetailRequestDto productDetailRequestDto = ProductDetailRequestDto.builder().itemId(productRegistrationRequestDto.getItemId()).build();
 
-        Item fetchedItem = sqlSession.selectOne("ItemMapper.findItemByItemId", generatedItemId);
+        ProductDetailResponseDto productDetailResponseDto = sqlSession.selectOne("ItemMapper.findItemByItemId", productDetailRequestDto.getItemId());
 
-        assertNotNull(fetchedItem);
-        assertEquals(generatedItemId, fetchedItem.getItemId());
+        assertNotNull(productDetailResponseDto);
+        assertEquals(productDetailRequestDto.getItemId(), productDetailResponseDto.getItemId());
     }
 }

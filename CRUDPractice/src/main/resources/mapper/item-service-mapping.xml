@@ -23,7 +23,7 @@
         FROM items
     </select>
 
-    <select id="findItemByItemId" parameterType="long" resultType="item">
+    <select id="findItemByItemId" parameterType="productDetailRequestDto" resultType="productDetailResponseDto">
         SELECT
             `item_id`, `name`, `price`, `category`, `image`, `information`, `measurment`
         FROM items
