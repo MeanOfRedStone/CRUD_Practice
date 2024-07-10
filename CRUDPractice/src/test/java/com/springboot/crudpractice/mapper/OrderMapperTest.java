@@ -2,7 +2,9 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.order.domain.Order;
+import com.springboot.crudpractice.order.dto.PickRequestDto;
 import com.springboot.crudpractice.user.domain.User;
+import com.springboot.crudpractice.user.dto.JoinRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -25,7 +27,7 @@ public class OrderMapperTest {
     @Test
     void saveOrder_WhenOrderIsValid_ShouldIncreaseOrdersCount() {
         Long generatedId = getTestUser().getUserId();
-        Order testOrder =Order.builder()
+        PickRequestDto pickRequestDto =PickRequestDto.builder()
                 .userId(generatedId)
                 .status("cart")
                 .option("L")
@@ -35,7 +37,7 @@ public class OrderMapperTest {
         int initialCount = countOrders();
         int expectedCount = initialCount + NEW_ORDER;
 
-        sqlSession.insert("OrderMapper.saveOrder", testOrder);
+        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
 
         int actualCount = countOrders();
         assertEquals(expectedCount, actualCount);
@@ -84,8 +86,8 @@ public class OrderMapperTest {
         }
     }
 
-    private User getTestUser() {
-        User testUser = User.builder()
+    private JoinRequestDto getTestUser() {
+        JoinRequestDto joinRequestDto = JoinRequestDto.builder()
                 .id("admin")
                 .password("password")
                 .name("admin")
@@ -97,8 +99,8 @@ public class OrderMapperTest {
                 .emailContact(1)
                 .phoneContact(1)
                 .build();
-        sqlSession.insert("UserMapper.saveUser", testUser);
-        return testUser;
+        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
+        return joinRequestDto;
     }
 
     @Test

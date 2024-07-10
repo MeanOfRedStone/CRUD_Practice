@@ -8,7 +8,7 @@
         FROM orders
     </select>
 
-    <insert id="saveOrder" parameterType="order" useGeneratedKeys="true" keyProperty="orderId">
+    <insert id="saveOrder" parameterType="pickRequestDto" useGeneratedKeys="true" keyProperty="orderId">
         INSERT INTO orders
             (`user_id`, `status`, `option`, `quantity`, `price`, `created_at`, `modified_at`)
         VALUES
