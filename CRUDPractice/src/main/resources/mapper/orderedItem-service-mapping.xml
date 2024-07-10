@@ -8,7 +8,7 @@
         FROM ordered_items
     </select>
 
-    <insert id="saveOrderedItem" parameterType="long">
+    <insert id="saveOrderedItem" parameterType="orderedItemRequestDto">
         INSERT INTO ordered_items
             (`order_id`, `item_id`, `created_at`, `modified_at`)
         VALUES

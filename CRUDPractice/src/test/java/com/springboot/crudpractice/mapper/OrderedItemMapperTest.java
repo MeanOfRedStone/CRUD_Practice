@@ -2,8 +2,11 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.order.domain.Order;
+import com.springboot.crudpractice.order.dto.PickRequestDto;
 import com.springboot.crudpractice.orderedItem.domain.OrderedItem;
+import com.springboot.crudpractice.orderedItem.dto.OrderedItemRequestDto;
 import com.springboot.crudpractice.user.domain.User;
+import com.springboot.crudpractice.user.dto.JoinRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -22,13 +25,13 @@ public class OrderedItemMapperTest {
 
     @Test
     void saveOrderedItem_WhenOrderedItemIsValid_ShouldIncreaseItemCount(){
-        OrderedItem testOrderedItem = OrderedItem.builder()
+        OrderedItemRequestDto orderedItemRequestDto = OrderedItemRequestDto.builder()
                 .orderId(getOrderId())
                 .itemId(getItemId())
                 .build();
         int expectedCount = countOrderedItems() + NEW_ORDERED_ITEM;
 
-        sqlSession.insert("OrderedItemMapper.saveOrderedItem", testOrderedItem);
+        sqlSession.insert("OrderedItemMapper.saveOrderedItem", orderedItemRequestDto);
 
         int actualCount = countOrderedItems();
         assertEquals(expectedCount, actualCount);
@@ -56,7 +59,7 @@ public class OrderedItemMapperTest {
     }
 
     private long getUserId() {
-        User testUser = User.builder()
+        JoinRequestDto joinRequestDto = JoinRequestDto.builder()
                 .id("admin")
                 .password("password")
                 .name("admin")
@@ -68,20 +71,20 @@ public class OrderedItemMapperTest {
                 .emailContact(1)
                 .phoneContact(1)
                 .build();
-        sqlSession.insert("UserMapper.saveUser", testUser);
-        return testUser.getUserId();
+        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
+        return joinRequestDto.getUserId();
     }
 
     private long getOrderId() {
-        Order testOrder =Order.builder()
+        PickRequestDto pickRequestDto =PickRequestDto.builder()
                 .userId(getUserId())
                 .status("cart")
                 .option("L")
                 .quantity(3)
                 .price(1_000)
                 .build();
-        sqlSession.insert("OrderMapper.saveOrder", testOrder);
-        return testOrder.getOrderId();
+        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
+        return pickRequestDto.getOrderId();
     }
 
     private long getItemId() {
