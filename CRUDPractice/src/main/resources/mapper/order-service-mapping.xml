@@ -21,7 +21,7 @@
         WHERE `order_id` = #{orderId} AND `status`= "cart"
     </update>
 
-    <select id="findOrdersOfWhichStatusAreCartByUserId" parameterType="order" resultType="order">
+    <select id="findOrdersOfWhichStatusAreCartByUserId" parameterType="cartRequestDto" resultType="order">
         SELECT `order_id`, `status`, `option` ,`quantity`, `price`
         FROM orders
         WHERE `user_id` = #{userId} AND `status`= "cart"

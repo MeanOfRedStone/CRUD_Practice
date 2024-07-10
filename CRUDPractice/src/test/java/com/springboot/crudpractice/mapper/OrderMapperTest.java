@@ -2,6 +2,7 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.order.domain.Order;
+import com.springboot.crudpractice.order.dto.CartResponseDto;
 import com.springboot.crudpractice.order.dto.CartUpdateDto;
 import com.springboot.crudpractice.order.dto.PickRequestDto;
 import com.springboot.crudpractice.user.domain.User;
@@ -79,10 +80,10 @@ public class OrderMapperTest {
     void findOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
         Long generatedId = getTestUser().getUserId();
 
-        List<Order> fetchedOrders = sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId);
+        CartResponseDto cartResponseDto = new CartResponseDto(sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId));
 
-        assertNotNull(fetchedOrders);
-        for (Order order : fetchedOrders) {
+        assertNotNull(cartResponseDto);
+        for (Order order : cartResponseDto.getCartList()) {
             assertEquals(order.getUserId(), generatedId);
         }
     }
