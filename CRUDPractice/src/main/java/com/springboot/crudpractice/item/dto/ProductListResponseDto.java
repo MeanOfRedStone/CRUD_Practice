@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-
 public class ProductListResponseDto {
     private final List<Item> productList;
 
