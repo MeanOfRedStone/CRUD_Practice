@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProductRegistrationDto {
+public class ProductDetailResponseDto {
     private long itemId;
     private String name;
     private int price;
@@ -13,4 +13,7 @@ public class ProductRegistrationDto {
     private String image;
     private String information;
     private String measurment;
+    private long detailId;
+    private String option;
+    private int quantity;
 }

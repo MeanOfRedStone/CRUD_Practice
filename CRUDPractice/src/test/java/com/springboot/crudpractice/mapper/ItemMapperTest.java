@@ -1,8 +1,8 @@
 package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
-import com.springboot.crudpractice.item.dto.ProductListDto;
-import com.springboot.crudpractice.item.dto.ProductRegistrationDto;
+import com.springboot.crudpractice.item.dto.ProductListResponseDto;
+import com.springboot.crudpractice.item.dto.ProductRegistrationRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -24,7 +24,7 @@ public class ItemMapperTest {
 
     @Test
     void saveItem_WhenItemIsValid_ShouldIncreaseItemsCount() {
-        ProductRegistrationDto productRegistrationDto = ProductRegistrationDto.builder()
+        ProductRegistrationRequestDto productRegistrationDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -49,7 +49,7 @@ public class ItemMapperTest {
     void findAllItems_ShouldReturnAllItems() {
         int initialCount = countItems();
         int expectedCount = initialCount + 2 * NEW_ITEM;
-        ProductRegistrationDto productRegistrationDto = ProductRegistrationDto.builder()
+        ProductRegistrationRequestDto productRegistrationDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -58,7 +58,7 @@ public class ItemMapperTest {
                 .measurment("measurement1")
                 .build();
         sqlSession.insert("ItemMapper.saveItem", productRegistrationDto);
-        ProductRegistrationDto productRegistrationDto2 = ProductRegistrationDto.builder()
+        ProductRegistrationRequestDto productRegistrationDto2 = ProductRegistrationRequestDto.builder()
                 .name("청바지")
                 .price(2_000)
                 .category("바지")
@@ -70,9 +70,9 @@ public class ItemMapperTest {
 
 
         List<Item> fetchedItems = sqlSession.selectList("ItemMapper.findAllItems");
-        ProductListDto productListDto = new ProductListDto(fetchedItems);
+        ProductListResponseDto productListResponseDto = new ProductListResponseDto(fetchedItems);
 
-        int actualCount = productListDto.getProductList().size();
+        int actualCount = productListResponseDto.getProductList().size();
         assertEquals(expectedCount, actualCount);
     }
 
