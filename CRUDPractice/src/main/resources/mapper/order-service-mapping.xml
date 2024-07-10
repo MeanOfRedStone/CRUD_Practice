@@ -15,7 +15,7 @@
             (#{userId}, #{status}, #{option}, #{quantity}, #{price}, NOW(), NOW())
     </insert>
 
-    <update id="updateOrderOfWhichStatusIsCart" parameterType="order">
+    <update id="updateOrderOfWhichStatusIsCart" parameterType="cartUpdateDto">
         UPDATE orders
         SET `option` = #{option}, `quantity` = #{quantity}, `modified_at` = NOW()
         WHERE `order_id` = #{orderId} AND `status`= "cart"

@@ -2,6 +2,7 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.order.domain.Order;
+import com.springboot.crudpractice.order.dto.CartUpdateDto;
 import com.springboot.crudpractice.order.dto.PickRequestDto;
 import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
@@ -50,27 +51,27 @@ public class OrderMapperTest {
     @Test
     void updateOrderOfWhichStatusIsCart_WhenOrderExists_ShouldUpdateOrder() {
         Long generatedId = getTestUser().getUserId();
-        Order testOrder = Order.builder()
+        PickRequestDto pickRequestDto = PickRequestDto.builder()
                 .userId(generatedId)
                 .status("cart")
                 .option("M")
                 .quantity(3)
                 .price(1_000)
                 .build();
-        sqlSession.insert("OrderMapper.saveOrder", testOrder);
+        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
 
         int expectedQuantity = 1;
-        Order updatedTestOrder = Order.builder()
-                .orderId(testOrder.getOrderId())
+        CartUpdateDto cartUpdateDto = CartUpdateDto.builder()
+                .orderId(pickRequestDto.getOrderId())
                 .userId(generatedId)
                 .status("cart")
                 .option("M")
                 .quantity(expectedQuantity)
                 .price(1_000)
                 .build();
-        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", updatedTestOrder);
+        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", cartUpdateDto);
 
-        Order fetechedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", testOrder.getOrderId());
+        Order fetechedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", cartUpdateDto.getOrderId());
         assertEquals(expectedQuantity, fetechedOrder.getQuantity());
     }
 
