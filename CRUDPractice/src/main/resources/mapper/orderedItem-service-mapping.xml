@@ -15,7 +15,7 @@
             (#{orderId}, #{itemId}, NOW(), NOW())
     </insert>
 
-    <select id="findOrderedItemByOrderIdAndItemId" parameterType="orderedItem" resultType="orderedItem">
+    <select id="findOrderedItemByOrderIdAndItemId" parameterType="orderedItemRequestDto" resultType="orderedItemResponseDto">
         SELECT `order_id`, `item_id`
         FROM ordered_items
     </select>

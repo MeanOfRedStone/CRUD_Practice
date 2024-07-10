@@ -5,6 +5,7 @@ import com.springboot.crudpractice.order.domain.Order;
 import com.springboot.crudpractice.order.dto.PickRequestDto;
 import com.springboot.crudpractice.orderedItem.domain.OrderedItem;
 import com.springboot.crudpractice.orderedItem.dto.OrderedItemRequestDto;
+import com.springboot.crudpractice.orderedItem.dto.OrderedItemResponseDto;
 import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
 import org.apache.ibatis.session.SqlSession;
@@ -39,19 +40,17 @@ public class OrderedItemMapperTest {
 
     @Test
     void findOrderedItemByOrderIdAndItemId_WhenOrderedItemExists_ShouldReturnOrderedItem(){
-        Long orderId = getOrderId();
-        Long itemId = getItemId();
-        OrderedItem testOrderedItem = OrderedItem.builder()
-                .orderId(orderId)
-                .itemId(itemId)
+        OrderedItemRequestDto orderedItemRequestDto = OrderedItemRequestDto.builder()
+                .orderId(getOrderId())
+                .itemId(getItemId())
                 .build();
-        sqlSession.insert("OrderedItemMapper.saveOrderedItem", testOrderedItem);
+        sqlSession.insert("OrderedItemMapper.saveOrderedItem", orderedItemRequestDto);
 
-        OrderedItem fetchedOrderedItem = sqlSession.selectOne("OrderedItemMapper.findOrderedItemByOrderIdAndItemId", OrderedItem.builder().itemId(itemId).orderId(orderId).build());
+        OrderedItemResponseDto orderedItemResponseDto = sqlSession.selectOne("OrderedItemMapper.findOrderedItemByOrderIdAndItemId", OrderedItem.builder().itemId(orderedItemRequestDto.getItemId()).orderId(orderedItemRequestDto.getOrderId()).build());
 
-        assertNotNull(fetchedOrderedItem);
-        assertEquals(itemId, fetchedOrderedItem.getItemId());
-        assertEquals(orderId, fetchedOrderedItem.getOrderId());
+        assertNotNull(orderedItemResponseDto);
+        assertEquals(orderedItemRequestDto.getItemId(), orderedItemResponseDto.getItemId());
+        assertEquals(orderedItemRequestDto.getOrderId(), orderedItemResponseDto.getOrderId());
     }
 
     private int countOrderedItems() {
