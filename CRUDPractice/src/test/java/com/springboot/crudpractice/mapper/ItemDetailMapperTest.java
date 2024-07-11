@@ -3,6 +3,9 @@ package com.springboot.crudpractice.mapper;
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.item.domain.ItemDetail;
 import com.springboot.crudpractice.item.dto.ProductOptionRegistrationRequestDto;
+import com.springboot.crudpractice.item.dto.ProductOptionRequestDto;
+import com.springboot.crudpractice.item.dto.ProductOptionResponseDto;
+import com.springboot.crudpractice.item.dto.ProductRegistrationRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -43,21 +46,21 @@ public class ItemDetailMapperTest {
         Long generatedItemId = getItemId();
         saveTestItemDetail(generatedItemId, "L", 5);
         saveTestItemDetail(generatedItemId, "M", 3);
-        int expectedCount = 2;
+        int expectedCount = 2 * NEW_ITEM_DETAIL;
 
-        List<ItemDetail> fetchedItemDetails = sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", generatedItemId);
+        ProductOptionResponseDto productOptionResponseDto = new ProductOptionResponseDto(sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", ProductOptionRequestDto.builder().itemId(generatedItemId).build()));
 
-        assertEquals(expectedCount, fetchedItemDetails.size());
+        assertEquals(expectedCount, productOptionResponseDto.getItemDetails().size());
     }
 
     private void saveTestItemDetail(Long itemId, String option, int quantity) {
-        ItemDetail testItemDetail = ItemDetail.builder()
+        ProductOptionRegistrationRequestDto productOptionRegistrationRequestDto = ProductOptionRegistrationRequestDto.builder()
                 .itemId(itemId)
                 .option(option)
                 .quantity(quantity)
                 .build();
 
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", testItemDetail);
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
     }
 
     @Test
@@ -99,7 +102,7 @@ public class ItemDetailMapperTest {
     }
 
     private long getItemId() {
-        Item testItem = Item.builder()
+        ProductRegistrationRequestDto productRegistrationRequestDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -107,8 +110,8 @@ public class ItemDetailMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", testItem);
+        sqlSession.insert("ItemMapper.saveItem", productRegistrationRequestDto);
 
-        return testItem.getItemId();
+        return productRegistrationRequestDto.getItemId();
     }
 }

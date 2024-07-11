@@ -15,9 +15,10 @@
             (#{itemId}, #{option}, #{quantity}, NOW(), NOW())
     </insert>
 
-    <select id="findAllItemDetailByItemId" parameterType="long" resultType="itemDetail">
-        SELECT `item_id`, `option`, `quantity`
+    <select id="findAllItemDetailByItemId" parameterType="productOptionRequestDto" resultType="itemDetail">
+        SELECT `item_id`, `detail_id`, `option`, `quantity`
         FROM items_detail
+        WHERE `item_id` = #{itemId}
     </select>
 
     <select id="findItemDetailByDetailId" parameterType="long" resultType="itemDetail">
