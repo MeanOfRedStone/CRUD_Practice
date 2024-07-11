@@ -27,7 +27,7 @@
         WHERE `detail_id` = #{detailId}
     </select>
 
-    <update id="updateItemDetail" parameterType="itemDetail">
+    <update id="updateItemDetail" parameterType="productOptionUpdateRequestDto">
         UPDATE items_detail
         SET `quantity` = #{quantity}, `option` = #{option}, `modified_at` = NOW()
         WHERE `detail_id` = #{detailId}

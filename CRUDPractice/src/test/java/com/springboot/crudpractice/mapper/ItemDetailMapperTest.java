@@ -77,24 +77,24 @@ public class ItemDetailMapperTest {
     @Test
     void updateItemDetail_WhenItemDetailExists_ShouldUpdateItemDetail() {
         Long generatedItemId = getItemId();
-        ItemDetail testItemDetail = ItemDetail.builder()
+        ProductOptionRegistrationRequestDto productOptionRegistrationRequestDto = ProductOptionRegistrationRequestDto.builder()
                 .itemId(generatedItemId)
                 .option("L")
                 .quantity(5)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", testItemDetail);
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
 
         int changedQuantity = 0;
-        ItemDetail updatedItemDetail = ItemDetail.builder()
-                .detailId(testItemDetail.getDetailId())
+        ProductOptionUpdateRequestDto productOptionUpdateRequestDto = ProductOptionUpdateRequestDto.builder()
+                .detailId(productOptionRegistrationRequestDto.getDetailId())
                 .itemId(generatedItemId)
                 .option("L")
                 .quantity(changedQuantity)
                 .build();
-        sqlSession.update("ItemDetailMapper.updateItemDetail", updatedItemDetail);
+        sqlSession.update("ItemDetailMapper.updateItemDetail", productOptionUpdateRequestDto);
 
-        ItemDetail fetchedItemDetail = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", testItemDetail.getDetailId());
-        assertEquals(changedQuantity, fetchedItemDetail.getQuantity());
+        ProductOptionResponseDto productOptionResponseDto = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", productOptionUpdateRequestDto.getDetailId());
+        assertEquals(changedQuantity, productOptionResponseDto.getQuantity());
     }
 
     private long getItemId() {
