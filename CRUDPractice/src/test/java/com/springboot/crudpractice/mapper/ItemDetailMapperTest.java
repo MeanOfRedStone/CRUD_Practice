@@ -1,19 +1,13 @@
 package com.springboot.crudpractice.mapper;
 
-import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.item.domain.ItemDetail;
-import com.springboot.crudpractice.item.dto.ProductOptionRegistrationRequestDto;
-import com.springboot.crudpractice.item.dto.ProductOptionRequestDto;
-import com.springboot.crudpractice.item.dto.ProductOptionResponseDto;
-import com.springboot.crudpractice.item.dto.ProductRegistrationRequestDto;
+import com.springboot.crudpractice.item.dto.*;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -48,9 +42,9 @@ public class ItemDetailMapperTest {
         saveTestItemDetail(generatedItemId, "M", 3);
         int expectedCount = 2 * NEW_ITEM_DETAIL;
 
-        ProductOptionResponseDto productOptionResponseDto = new ProductOptionResponseDto(sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", ProductOptionRequestDto.builder().itemId(generatedItemId).build()));
+        ProductOptionsResponseDto productOptionsResponseDto = new ProductOptionsResponseDto(sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", ProductOptionRequestDto.builder().itemId(generatedItemId).build()));
 
-        assertEquals(expectedCount, productOptionResponseDto.getItemDetails().size());
+        assertEquals(expectedCount, productOptionsResponseDto.getItemDetails().size());
     }
 
     private void saveTestItemDetail(Long itemId, String option, int quantity) {
@@ -66,16 +60,18 @@ public class ItemDetailMapperTest {
     @Test
     void findItemDetailByDetailId_WhenItemDetailExists_ShouldReturnItemDetail() {
         Long generatedItemId = getItemId();
-        ItemDetail testItemDetail = ItemDetail.builder()
+        ProductOptionRegistrationRequestDto productOptionRegistrationRequestDto = ProductOptionRegistrationRequestDto.builder()
                 .itemId(generatedItemId)
                 .option("L")
                 .quantity(3)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", testItemDetail);
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
 
-        ItemDetail fetechedItemDetail = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", testItemDetail.getDetailId());
+        ProductOptionUpdateRequestDto productOptionUpdateRequestDto = ProductOptionUpdateRequestDto.builder().detailId(productOptionRegistrationRequestDto.getDetailId()).build();
 
-        assertEquals(testItemDetail.getDetailId(), fetechedItemDetail.getDetailId());
+        ProductOptionResponseDto productOptionResponseDto = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", productOptionUpdateRequestDto);
+
+        assertEquals(productOptionRegistrationRequestDto.getDetailId(), productOptionResponseDto.getDetailId());
     }
 
     @Test

@@ -21,9 +21,10 @@
         WHERE `item_id` = #{itemId}
     </select>
 
-    <select id="findItemDetailByDetailId" parameterType="long" resultType="itemDetail">
+    <select id="findItemDetailByDetailId" parameterType="productOptionUpdateRequestDto" resultType="productOptionResponseDto">
         SELECT `detail_id`, `item_id`, `option`, `quantity`
         FROM items_detail
+        WHERE `detail_id` = #{detailId}
     </select>
 
     <update id="updateItemDetail" parameterType="itemDetail">
