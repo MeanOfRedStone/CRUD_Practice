@@ -8,6 +8,6 @@ import lombok.Getter;
 public class ProductOptionUpdateRequestDto {
     private long detailId;
     private long itemId;
-    private long status;
+    private String option;
     private long quantity;
 }
