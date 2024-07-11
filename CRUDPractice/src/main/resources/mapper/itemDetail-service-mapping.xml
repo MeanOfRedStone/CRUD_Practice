@@ -8,7 +8,7 @@
         FROM items_detail
     </select>
 
-    <insert id="saveItemDetail" parameterType="productOptionRequestDto" useGeneratedKeys="true" keyProperty="detailId">
+    <insert id="saveItemDetail" parameterType="productOptionRegistrationRequestDto" useGeneratedKeys="true" keyProperty="detailId">
         INSERT INTO items_detail
             (`item_id`, `option`, `quantity`, `created_at`, `modified_at`)
         VALUES

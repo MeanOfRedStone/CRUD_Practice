@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProductOptionRequestDto {
+public class ProductOptionRegistrationRequestDto {
     private long detailId;
     private long itemId;
     private String option;

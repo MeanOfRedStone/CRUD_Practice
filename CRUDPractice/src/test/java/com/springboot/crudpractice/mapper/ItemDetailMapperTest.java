@@ -2,7 +2,7 @@ package com.springboot.crudpractice.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.item.domain.ItemDetail;
-import com.springboot.crudpractice.item.dto.ProductOptionRequestDto;
+import com.springboot.crudpractice.item.dto.ProductOptionRegistrationRequestDto;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -23,12 +23,12 @@ public class ItemDetailMapperTest {
     void saveItemDetail_WhenItemDetailIsValid_ShouldIncreaseItemsDetailCount() {
         int expectedCount = countItemsDetail() + NEW_ITEM_DETAIL;
 
-        ProductOptionRequestDto productOptionRequestDto = ProductOptionRequestDto.builder()
+        ProductOptionRegistrationRequestDto productOptionRegistrationRequestDto = ProductOptionRegistrationRequestDto.builder()
                 .itemId(getItemId())
                 .option("L")
                 .quantity(5)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRequestDto);
+        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
 
         int actualCount = countItemsDetail();
         assertEquals(expectedCount, actualCount);
