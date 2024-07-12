@@ -1,4 +1,4 @@
-package com.springboot.crudpractice.mapper;
+package com.springboot.crudpractice.item.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.item.dto.ProductDetailRequestDto;
@@ -22,7 +22,7 @@ public class ItemMapperTest {
     private static final int NEW_ITEM = 1;
 
     @Autowired
-    private SqlSession sqlSession;
+    private ItemMapper itemMapper;
 
     @Test
     void saveItem_WhenItemIsValid_ShouldIncreaseItemsCount() {
@@ -34,22 +34,18 @@ public class ItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        int initialCount = countItems();
+        int initialCount = itemMapper.countItems();
         int expectedCount =initialCount + NEW_ITEM;
 
-        sqlSession.insert("ItemMapper.saveItem", productRegistrationDto);
+        itemMapper.saveItem(productRegistrationDto);
 
-        int actualCount = countItems();
+        int actualCount = itemMapper.countItems();
         assertEquals(expectedCount, actualCount);
-    }
-
-    private int countItems() {
-        return sqlSession.selectOne("ItemMapper.countItems");
     }
 
     @Test
     void findAllItems_ShouldReturnAllItems() {
-        int initialCount = countItems();
+        int initialCount = itemMapper.countItems();
         int expectedCount = initialCount + 2 * NEW_ITEM;
         ProductRegistrationRequestDto productRegistrationDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
@@ -59,7 +55,7 @@ public class ItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", productRegistrationDto);
+        itemMapper.saveItem(productRegistrationDto);
         ProductRegistrationRequestDto productRegistrationDto2 = ProductRegistrationRequestDto.builder()
                 .name("청바지")
                 .price(2_000)
@@ -68,11 +64,9 @@ public class ItemMapperTest {
                 .information("info2")
                 .measurment("measurement2")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", productRegistrationDto2);
+        itemMapper.saveItem(productRegistrationDto2);
 
-
-        List<Item> fetchedItems = sqlSession.selectList("ItemMapper.findAllItems");
-        ProductListResponseDto productListResponseDto = new ProductListResponseDto(fetchedItems);
+        ProductListResponseDto productListResponseDto = new ProductListResponseDto(itemMapper.findAllItems());
 
         int actualCount = productListResponseDto.getProductList().size();
         assertEquals(expectedCount, actualCount);
@@ -88,10 +82,10 @@ public class ItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", productRegistrationRequestDto);
+        itemMapper.saveItem(productRegistrationRequestDto);
         ProductDetailRequestDto productDetailRequestDto = ProductDetailRequestDto.builder().itemId(productRegistrationRequestDto.getItemId()).build();
 
-        ProductDetailResponseDto productDetailResponseDto = sqlSession.selectOne("ItemMapper.findItemByItemId", productDetailRequestDto.getItemId());
+        ProductDetailResponseDto productDetailResponseDto = itemMapper.findByItemId(productDetailRequestDto);
 
         assertNotNull(productDetailResponseDto);
         assertEquals(productDetailRequestDto.getItemId(), productDetailResponseDto.getItemId());
