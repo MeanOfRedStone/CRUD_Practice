@@ -1,55 +1,49 @@
-package com.springboot.crudpractice.mapper;
+package com.springboot.crudpractice.user.mapper;
 
-import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
 import com.springboot.crudpractice.user.dto.LoginRequestDto;
 import com.springboot.crudpractice.user.dto.LoginResponseDto;
-import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.Assert.assertEquals;
+
 @SpringBootTest
 @Transactional
 public class UserMapperTest {
-    public static final int NEW_USER = 1;
+    private static final int NEW_USER = 1;
 
     @Autowired
-    private SqlSession sqlSession;
+    private UserMapper userMapper;
 
     @Test
     void saveUser_WhenUserIsValid_ShouldIncreaseUsersCount() {
         JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
-        int count = countUsers();
+        int count = userMapper.countUsers();
         int expectedCount = count + NEW_USER;
 
-        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
-        int actualCount = countUsers();
+        userMapper.saveUser(joinRequestDto);
+        int actualCount = userMapper.countUsers();
         assertEquals(expectedCount, actualCount);
     }
 
-    private int countUsers() {
-        return sqlSession.selectOne("UserMapper.countUsers");
-    }
-
     @Test
-    void findUser_WhenIdAndPasswordAreCorrect_ShouldReturnUser() {
+    void findUser_WhenIdAndPasswordAreCorrect_ShouldReturnLoginResponseDto() {
         JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
-        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
-        long expectedUserId = joinRequestDto.getUserId();
+        userMapper.saveUser(joinRequestDto);
 
         LoginRequestDto loginRequestDto = LoginRequestDto.builder().id("admin").password("admin").build();
-        LoginResponseDto loginResponseDto = sqlSession.selectOne("UserMapper.findUser", loginRequestDto);
-        long actualUserId = loginResponseDto.getUserId();
+        LoginResponseDto loginResponseDto = userMapper.findUser(loginRequestDto);
 
         assertNotNull(loginResponseDto);
-        assertEquals(expectedUserId, actualUserId);
+        assertEquals(joinRequestDto.getUserId(), loginResponseDto.getUserId());
     }
 
 }
