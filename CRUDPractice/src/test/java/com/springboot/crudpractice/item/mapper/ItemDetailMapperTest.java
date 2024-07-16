@@ -1,7 +1,9 @@
-package com.springboot.crudpractice.mapper;
+package com.springboot.crudpractice.item.mapper;
 
 import com.springboot.crudpractice.item.domain.ItemDetail;
 import com.springboot.crudpractice.item.dto.*;
+import com.springboot.crudpractice.item.mapper.ItemDetailMapper;
+import com.springboot.crudpractice.item.mapper.ItemMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -13,27 +15,41 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemDetailMapperTest {
     private static final int NEW_ITEM_DETAIL = 1;
+
     @Autowired
-    SqlSession sqlSession;
+    private ItemDetailMapper itemDetailMapper;
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Test
     void saveItemDetail_WhenItemDetailIsValid_ShouldIncreaseItemsDetailCount() {
-        int expectedCount = countItemsDetail() + NEW_ITEM_DETAIL;
+        int expectedCount = itemDetailMapper.countItemsDetail() + NEW_ITEM_DETAIL;
 
         ProductOptionRegistrationRequestDto productOptionRegistrationRequestDto = ProductOptionRegistrationRequestDto.builder()
                 .itemId(getItemId())
                 .option("L")
                 .quantity(5)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
+        itemDetailMapper.saveItemDetail(productOptionRegistrationRequestDto);
 
-        int actualCount = countItemsDetail();
+        int actualCount = itemDetailMapper.countItemsDetail();
         assertEquals(expectedCount, actualCount);
     }
 
-    private int countItemsDetail() {
-        return sqlSession.selectOne("ItemDetailMapper.countItemsDetail");
+    private long getItemId() {
+        ProductRegistrationRequestDto productRegistrationRequestDto = ProductRegistrationRequestDto.builder()
+                .name("블루셔츠")
+                .price(1_000)
+                .category("셔츠")
+                .image("image1")
+                .information("info1")
+                .measurment("measurement1")
+                .build();
+        itemMapper.saveItem(productRegistrationRequestDto);
+
+        return productRegistrationRequestDto.getItemId();
     }
+
 
     @Test
     void findAllItemDetailByItemId_WhenItemDetailExist_ShouldReturnItemDetail() {
@@ -42,7 +58,7 @@ public class ItemDetailMapperTest {
         saveTestItemDetail(generatedItemId, "M", 3);
         int expectedCount = 2 * NEW_ITEM_DETAIL;
 
-        ProductOptionsResponseDto productOptionsResponseDto = new ProductOptionsResponseDto(sqlSession.selectList("ItemDetailMapper.findAllItemDetailByItemId", ProductOptionRequestDto.builder().itemId(generatedItemId).build()));
+        ProductOptionsResponseDto productOptionsResponseDto = new ProductOptionsResponseDto(itemDetailMapper.findAllItemDetailByItemId(ProductOptionRequestDto.builder().itemId(generatedItemId).build()));
 
         assertEquals(expectedCount, productOptionsResponseDto.getItemDetails().size());
     }
@@ -54,7 +70,7 @@ public class ItemDetailMapperTest {
                 .quantity(quantity)
                 .build();
 
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
+        itemDetailMapper.saveItemDetail(productOptionRegistrationRequestDto);
     }
 
     @Test
@@ -65,11 +81,11 @@ public class ItemDetailMapperTest {
                 .option("L")
                 .quantity(3)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
+        itemDetailMapper.saveItemDetail(productOptionRegistrationRequestDto);
 
         ProductOptionUpdateRequestDto productOptionUpdateRequestDto = ProductOptionUpdateRequestDto.builder().detailId(productOptionRegistrationRequestDto.getDetailId()).build();
 
-        ProductOptionResponseDto productOptionResponseDto = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", productOptionUpdateRequestDto);
+        ProductOptionResponseDto productOptionResponseDto = itemDetailMapper.findItemDetailByDetailId(productOptionUpdateRequestDto);
 
         assertEquals(productOptionRegistrationRequestDto.getDetailId(), productOptionResponseDto.getDetailId());
     }
@@ -82,7 +98,7 @@ public class ItemDetailMapperTest {
                 .option("L")
                 .quantity(5)
                 .build();
-        sqlSession.insert("ItemDetailMapper.saveItemDetail", productOptionRegistrationRequestDto);
+        itemDetailMapper.saveItemDetail(productOptionRegistrationRequestDto);
 
         int changedQuantity = 0;
         ProductOptionUpdateRequestDto productOptionUpdateRequestDto = ProductOptionUpdateRequestDto.builder()
@@ -91,23 +107,10 @@ public class ItemDetailMapperTest {
                 .option("L")
                 .quantity(changedQuantity)
                 .build();
-        sqlSession.update("ItemDetailMapper.updateItemDetail", productOptionUpdateRequestDto);
+        itemDetailMapper.updateItemDetail(productOptionUpdateRequestDto);
 
-        ProductOptionResponseDto productOptionResponseDto = sqlSession.selectOne("ItemDetailMapper.findItemDetailByDetailId", productOptionUpdateRequestDto.getDetailId());
+        ProductOptionResponseDto productOptionResponseDto = itemDetailMapper.findItemDetailByDetailId(productOptionUpdateRequestDto);
         assertEquals(changedQuantity, productOptionResponseDto.getQuantity());
     }
 
-    private long getItemId() {
-        ProductRegistrationRequestDto productRegistrationRequestDto = ProductRegistrationRequestDto.builder()
-                .name("블루셔츠")
-                .price(1_000)
-                .category("셔츠")
-                .image("image1")
-                .information("info1")
-                .measurment("measurement1")
-                .build();
-        sqlSession.insert("ItemMapper.saveItem", productRegistrationRequestDto);
-
-        return productRegistrationRequestDto.getItemId();
-    }
 }
