@@ -1,12 +1,15 @@
-package com.springboot.crudpractice.mapper;
+package com.springboot.crudpractice.order.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
 import com.springboot.crudpractice.order.domain.Order;
+import com.springboot.crudpractice.order.dto.CartRequestDto;
 import com.springboot.crudpractice.order.dto.CartResponseDto;
 import com.springboot.crudpractice.order.dto.CartUpdateDto;
 import com.springboot.crudpractice.order.dto.PickRequestDto;
+import com.springboot.crudpractice.order.mapper.OrderMapper;
 import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
+import com.springboot.crudpractice.user.mapper.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -24,7 +27,10 @@ public class OrderMapperTest {
     private static final int NEW_ORDER = 1;
 
     @Autowired
-    private SqlSession sqlSession;
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     void saveOrder_WhenOrderIsValid_ShouldIncreaseOrdersCount() {
@@ -36,56 +42,13 @@ public class OrderMapperTest {
                 .quantity(3)
                 .price(1_000)
                 .build();
-        int initialCount = countOrders();
+        int initialCount = orderMapper.countOrders();
         int expectedCount = initialCount + NEW_ORDER;
 
-        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
+        orderMapper.saveOrder(pickRequestDto);
 
-        int actualCount = countOrders();
+        int actualCount = orderMapper.countOrders();
         assertEquals(expectedCount, actualCount);
-    }
-
-    private int countOrders() {
-        return sqlSession.selectOne("OrderMapper.countOrders");
-    }
-
-    @Test
-    void updateOrderOfWhichStatusIsCart_WhenOrderExists_ShouldUpdateOrder() {
-        Long generatedId = getTestUser().getUserId();
-        PickRequestDto pickRequestDto = PickRequestDto.builder()
-                .userId(generatedId)
-                .status("cart")
-                .option("M")
-                .quantity(3)
-                .price(1_000)
-                .build();
-        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
-
-        int expectedQuantity = 1;
-        CartUpdateDto cartUpdateDto = CartUpdateDto.builder()
-                .orderId(pickRequestDto.getOrderId())
-                .userId(generatedId)
-                .status("cart")
-                .option("M")
-                .quantity(expectedQuantity)
-                .price(1_000)
-                .build();
-        sqlSession.update("OrderMapper.updateOrderOfWhichStatusIsCart", cartUpdateDto);
-
-        Order fetechedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", cartUpdateDto.getOrderId());
-        assertEquals(expectedQuantity, fetechedOrder.getQuantity());
-    }
-
-    @Test
-    void findOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
-        Long generatedId = getTestUser().getUserId();
-
-        CartResponseDto cartResponseDto = new CartResponseDto(sqlSession.selectList("OrderMapper.findOrdersOfWhichStatusAreCartByUserId", generatedId));
-
-        assertNotNull(cartResponseDto);
-        for (Order order : cartResponseDto.getCartList()) {
-            assertEquals(order.getUserId(), generatedId);
-        }
     }
 
     private JoinRequestDto getTestUser() {
@@ -101,27 +64,75 @@ public class OrderMapperTest {
                 .emailContact(1)
                 .phoneContact(1)
                 .build();
-        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
+        userMapper.saveUser(joinRequestDto);
         return joinRequestDto;
+    }
+
+
+    @Test
+    void updateOrderOfWhichStatusIsCart_WhenOrderExists_ShouldUpdateOrder() {
+        Long generatedId = getTestUser().getUserId();
+        PickRequestDto pickRequestDto = PickRequestDto.builder()
+                .userId(generatedId)
+                .status("cart")
+                .option("M")
+                .quantity(3)
+                .price(1_000)
+                .build();
+        orderMapper.saveOrder(pickRequestDto);
+
+        int expectedQuantity = 1;
+        CartUpdateDto cartUpdateDto = CartUpdateDto.builder()
+                .orderId(pickRequestDto.getOrderId())
+                .userId(generatedId)
+                .status("cart")
+                .option("M")
+                .quantity(expectedQuantity)
+                .price(1_000)
+                .build();
+        orderMapper.updateOrderOfWhichStatusIsCart(cartUpdateDto);
+
+        Order fetechedOrder = orderMapper.findOrderByOrderId(cartUpdateDto);
+        assertEquals(expectedQuantity, fetechedOrder.getQuantity());
     }
 
     @Test
     void findOrderByOrderId_WhenOrderExists_ShouldReturnOrder() {
         Long generatedId = getTestUser().getUserId();
-        Order testOrder =Order.builder()
+        PickRequestDto pickRequestDto =PickRequestDto.builder()
                 .userId(generatedId)
                 .status("cart")
                 .option("L")
                 .quantity(3)
                 .price(1_000)
                 .build();
-        sqlSession.insert("OrderMapper.saveOrder", testOrder);
-        Long expectedOrderId = testOrder.getOrderId();
+        orderMapper.saveOrder(pickRequestDto);
+        Long expectedOrderId = pickRequestDto.getOrderId();
 
-        Order fetchedOrder = sqlSession.selectOne("OrderMapper.findOrderByOrderId", testOrder.getOrderId());
+        CartUpdateDto cartUpdateDto =CartUpdateDto.builder()
+                .orderId(pickRequestDto.getOrderId())
+                .userId(generatedId)
+                .status("cart")
+                .option("L")
+                .quantity(3)
+                .price(1_000)
+                .build();
+        Order fetchedOrder = orderMapper.findOrderByOrderId(cartUpdateDto);
         Long actualOrderId = fetchedOrder.getOrderId();
 
         assertNotNull(fetchedOrder);
         assertEquals(expectedOrderId, actualOrderId);
+    }
+
+    @Test
+    void findOrdersOfWhichStatusAreCartByUserId_WhenOrderExists_ShouldReturnOrder() {
+        Long generatedId = getTestUser().getUserId();
+
+        CartResponseDto cartResponseDto = new CartResponseDto(orderMapper.findOrdersOfWhichStatusAreCartByUserId(CartRequestDto.builder().userId(generatedId).build()));
+
+        assertNotNull(cartResponseDto);
+        for (Order order : cartResponseDto.getCartList()) {
+            assertEquals(order.getUserId(), generatedId);
+        }
     }
 }
