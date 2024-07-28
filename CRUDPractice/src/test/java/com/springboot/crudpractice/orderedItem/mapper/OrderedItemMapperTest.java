@@ -1,13 +1,17 @@
-package com.springboot.crudpractice.mapper;
+package com.springboot.crudpractice.orderedItem.mapper;
 
 import com.springboot.crudpractice.item.domain.Item;
+import com.springboot.crudpractice.item.dto.ProductRegistrationRequestDto;
+import com.springboot.crudpractice.item.mapper.ItemMapper;
 import com.springboot.crudpractice.order.domain.Order;
 import com.springboot.crudpractice.order.dto.PickRequestDto;
+import com.springboot.crudpractice.order.mapper.OrderMapper;
 import com.springboot.crudpractice.orderedItem.domain.OrderedItem;
 import com.springboot.crudpractice.orderedItem.dto.OrderedItemRequestDto;
 import com.springboot.crudpractice.orderedItem.dto.OrderedItemResponseDto;
 import com.springboot.crudpractice.user.domain.User;
 import com.springboot.crudpractice.user.dto.JoinRequestDto;
+import com.springboot.crudpractice.user.mapper.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +26,16 @@ public class OrderedItemMapperTest {
     private static final int NEW_ORDERED_ITEM = 1;
 
     @Autowired
-    private SqlSession sqlSession;
+    private OrderedItemMapper orderedItemMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Test
     void saveOrderedItem_WhenOrderedItemIsValid_ShouldIncreaseItemCount(){
@@ -30,31 +43,12 @@ public class OrderedItemMapperTest {
                 .orderId(getOrderId())
                 .itemId(getItemId())
                 .build();
-        int expectedCount = countOrderedItems() + NEW_ORDERED_ITEM;
+        int expectedCount = orderedItemMapper.countOrderedItems() + NEW_ORDERED_ITEM;
 
-        sqlSession.insert("OrderedItemMapper.saveOrderedItem", orderedItemRequestDto);
+        orderedItemMapper.saveOrderedItem(orderedItemRequestDto);
 
-        int actualCount = countOrderedItems();
+        int actualCount = orderedItemMapper.countOrderedItems();
         assertEquals(expectedCount, actualCount);
-    }
-
-    @Test
-    void findOrderedItemByOrderIdAndItemId_WhenOrderedItemExists_ShouldReturnOrderedItem(){
-        OrderedItemRequestDto orderedItemRequestDto = OrderedItemRequestDto.builder()
-                .orderId(getOrderId())
-                .itemId(getItemId())
-                .build();
-        sqlSession.insert("OrderedItemMapper.saveOrderedItem", orderedItemRequestDto);
-
-        OrderedItemResponseDto orderedItemResponseDto = sqlSession.selectOne("OrderedItemMapper.findOrderedItemByOrderIdAndItemId", OrderedItem.builder().itemId(orderedItemRequestDto.getItemId()).orderId(orderedItemRequestDto.getOrderId()).build());
-
-        assertNotNull(orderedItemResponseDto);
-        assertEquals(orderedItemRequestDto.getItemId(), orderedItemResponseDto.getItemId());
-        assertEquals(orderedItemRequestDto.getOrderId(), orderedItemResponseDto.getOrderId());
-    }
-
-    private int countOrderedItems() {
-        return sqlSession.selectOne("OrderedItemMapper.countOrderedItems");
     }
 
     private long getUserId() {
@@ -70,7 +64,7 @@ public class OrderedItemMapperTest {
                 .emailContact(1)
                 .phoneContact(1)
                 .build();
-        sqlSession.insert("UserMapper.saveUser", joinRequestDto);
+        userMapper.saveUser(joinRequestDto);
         return joinRequestDto.getUserId();
     }
 
@@ -82,12 +76,12 @@ public class OrderedItemMapperTest {
                 .quantity(3)
                 .price(1_000)
                 .build();
-        sqlSession.insert("OrderMapper.saveOrder", pickRequestDto);
+        orderMapper.saveOrder(pickRequestDto);
         return pickRequestDto.getOrderId();
     }
 
     private long getItemId() {
-        Item testItem = Item.builder()
+        ProductRegistrationRequestDto productRegistrationRequestDto = ProductRegistrationRequestDto.builder()
                 .name("블루셔츠")
                 .price(1_000)
                 .category("셔츠")
@@ -95,7 +89,22 @@ public class OrderedItemMapperTest {
                 .information("info1")
                 .measurment("measurement1")
                 .build();
-        sqlSession.insert("ItemMapper.saveItem", testItem);
-        return testItem.getItemId();
+        itemMapper.saveItem(productRegistrationRequestDto);
+        return productRegistrationRequestDto.getItemId();
+    }
+
+    @Test
+    void findOrderedItemByOrderIdAndItemId_WhenOrderedItemExists_ShouldReturnOrderedItem(){
+        OrderedItemRequestDto orderedItemRequestDto = OrderedItemRequestDto.builder()
+                .orderId(getOrderId())
+                .itemId(getItemId())
+                .build();
+        orderedItemMapper.saveOrderedItem(orderedItemRequestDto);
+
+        OrderedItemResponseDto orderedItemResponseDto = orderedItemMapper.findOrderedItemByOrderIdAndItemId(OrderedItemRequestDto.builder().itemId(orderedItemRequestDto.getItemId()).orderId(orderedItemRequestDto.getOrderId()).build());
+
+        assertNotNull(orderedItemResponseDto);
+        assertEquals(orderedItemRequestDto.getItemId(), orderedItemResponseDto.getItemId());
+        assertEquals(orderedItemRequestDto.getOrderId(), orderedItemResponseDto.getOrderId());
     }
 }
