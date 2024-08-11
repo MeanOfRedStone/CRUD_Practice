@@ -46,4 +46,17 @@ public class UserMapperTest {
         assertEquals(joinRequestDto.getUserId(), loginResponseDto.getUserId());
     }
 
+    @Test
+    void findUserById_WhenIdIsCorrect_ShouldReturnLoginResponseDto() {
+        JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
+                .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
+        userMapper.saveUser(joinRequestDto);
+
+        LoginRequestDto loginRequestDto = LoginRequestDto.builder().id("admin").build();
+        LoginResponseDto loginResponseDto = userMapper.findUserById(loginRequestDto);
+
+        assertNotNull(loginResponseDto);
+        assertEquals(joinRequestDto.getUserId(), loginResponseDto.getUserId());
+    }
+
 }
