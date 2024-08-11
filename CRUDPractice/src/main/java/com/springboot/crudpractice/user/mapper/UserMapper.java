@@ -24,5 +24,5 @@ public interface UserMapper {
     LoginResponseDto findUserByIdAndPassword(LoginRequestDto loginRequestDto);
 
     @Select("SELECT user_id, name FROM users WHERE id = #{id}")
-    LoginResponseDto findUserById(LoginRequestDto loginRequestDto);
+    LoginResponseDto findUserById(JoinRequestDto joinRequestDto);
 }

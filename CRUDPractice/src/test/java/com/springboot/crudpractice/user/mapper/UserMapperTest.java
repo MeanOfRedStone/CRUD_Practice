@@ -52,8 +52,8 @@ public class UserMapperTest {
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
         userMapper.saveUser(joinRequestDto);
 
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder().id("admin").build();
-        LoginResponseDto loginResponseDto = userMapper.findUserById(loginRequestDto);
+        JoinRequestDto joinRequestDto2 = JoinRequestDto.builder().id("admin").build();
+        LoginResponseDto loginResponseDto = userMapper.findUserById(joinRequestDto2);
 
         assertNotNull(loginResponseDto);
         assertEquals(joinRequestDto.getUserId(), loginResponseDto.getUserId());
