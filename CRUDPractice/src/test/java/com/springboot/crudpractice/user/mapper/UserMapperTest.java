@@ -34,7 +34,7 @@ public class UserMapperTest {
     }
 
     @Test
-    void findUser_WhenIdAndPasswordAreCorrect_ShouldReturnLoginResponseDto() {
+    void findUserByIdAndPassword_WhenIdAndPasswordAreCorrect_ShouldReturnLoginResponseDto() {
         JoinRequestDto joinRequestDto = JoinRequestDto.builder().id("admin").password("admin").name("admin").email("admin").phone("999").address("seoul")
                 .addressDetail("Jongno").agreement(1).phoneContact(1).emailContact(1).build();
         userMapper.saveUser(joinRequestDto);
