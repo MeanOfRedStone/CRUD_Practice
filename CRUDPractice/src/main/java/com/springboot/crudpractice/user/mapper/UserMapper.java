@@ -22,4 +22,7 @@ public interface UserMapper {
 
     @Select("SELECT user_id, name FROM users WHERE id = #{id} AND password = #{password}")
     LoginResponseDto findUserByIdAndPassword(LoginRequestDto loginRequestDto);
+
+    @Select("SELECT user_id, name FROM users WHERE id = #{id}")
+    LoginResponseDto findUserById(LoginRequestDto loginRequestDto);
 }
