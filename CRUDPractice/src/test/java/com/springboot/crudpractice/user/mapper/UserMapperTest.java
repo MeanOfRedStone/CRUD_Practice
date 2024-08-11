@@ -40,7 +40,7 @@ public class UserMapperTest {
         userMapper.saveUser(joinRequestDto);
 
         LoginRequestDto loginRequestDto = LoginRequestDto.builder().id("admin").password("admin").build();
-        LoginResponseDto loginResponseDto = userMapper.findUser(loginRequestDto);
+        LoginResponseDto loginResponseDto = userMapper.findUserByIdAndPassword(loginRequestDto);
 
         assertNotNull(loginResponseDto);
         assertEquals(joinRequestDto.getUserId(), loginResponseDto.getUserId());

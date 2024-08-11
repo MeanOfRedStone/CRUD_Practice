@@ -21,5 +21,5 @@ public interface UserMapper {
     int countUsers();
 
     @Select("SELECT user_id, name FROM users WHERE id = #{id} AND password = #{password}")
-    LoginResponseDto findUser(LoginRequestDto loginRequestDto);
+    LoginResponseDto findUserByIdAndPassword(LoginRequestDto loginRequestDto);
 }
